@@ -48,3 +48,23 @@ public class DIConfig
 <connectionStrings>
 	<add name="DBconnection" connectionString="data source=VREMENSKISTROJ;initial catalog=JustStudents;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework" providerName="System.Data.SqlClient" />
 </connectionStrings>
+
+-----------AUTOMAPPER------------
+
+- u Common pravis klasu MapperProfile
+
+- instaliras AutoMapper i AutoMapper.Extensions.Microsoft.DependencyInjection u class library gdje ce ga se koristit:
+	- Common zbog MappingProfile, Repository jer tamo mapira, Model jer je tamo StudentDTO, DAL jer je tamo Student, WebAPI jer je tamo DIConfig
+	- zbog Entity Framework 4.7.2 korisiti Automapper 9 i AutoMapper.Extensions.Microsoft.DependencyInjection 7 ... * u ovoj fazi sve jos radi, instalacija nece pokidati kod
+
+- dodati u DIConfig:
+
+		var mapperConfig = new MapperConfiguration(mc =>
+            	{
+                mc.AddProfile(new MappingProfile());
+            	});
+            	IMapper mapper = mapperConfig.CreateMapper();
+            	builder.RegisterInstance(mapper).As<IMapper>();
+
+------------------------------------
+
