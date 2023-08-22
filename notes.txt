@@ -1,0 +1,50 @@
+- kad napravis DAL layer
+	- add new item 
+		- ADO NET Entity Data Model
+			- ime EFContext
+			- code first from database
+			- spoji se s bazom ako nema ponudjeno
+			- konekciju nazovi drukcije, npr DBconnection
+
+- sad je spojen s bazom
+
+* ako bude promjena na tablicama u bazi, neznam kako updejt, ali moze skrljati DAL i napravit ponovo
+
+...
+
+- instaliram Autofaci Autofac.WebApi2 u WebAPI 
+
+- instaliram Entity Framework 6.4.4 (EF6) u DAL, Repository
+	- bez ovoga ne vidi stvari iz dependency injection u repozitoriju i DBcontext u EFContext u DAL
+	- potrebno za mapiranje kada nemamo direktnu konekciju i SQL komande
+
+- DIConfig (svejedno ime) klasa u App_Start:
+
+
+public class DIConfig
+    {
+        public static void Configure()
+        {
+            var builder = new ContainerBuilder();
+            var config = GlobalConfiguration.Configuration;
+
+            // Register your Web API controllers.
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+
+            builder.RegisterType<EFContext>().AsSelf();
+            builder.RegisterType<StudentService>().As<IService>();
+            builder.RegisterType<StudentRepository>().As<IRepository>();
+
+            var container = builder.Build();
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+        }
+    }
+
+- u Global.asax dodati DIConfig.Configure(); na kraj
+	- prolazi Configure() i ConfigureContainer() ali mora i u DIConfig i u Global.asax biti isto nazvano jel, poziva se metoda
+
+- u kontroleru Web.config dodati connection string jer se sad spajam sa EF a ne direkt:
+
+<connectionStrings>
+	<add name="DBconnection" connectionString="data source=VREMENSKISTROJ;initial catalog=JustStudents;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework" providerName="System.Data.SqlClient" />
+</connectionStrings>
