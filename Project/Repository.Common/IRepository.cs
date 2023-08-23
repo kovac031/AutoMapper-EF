@@ -14,5 +14,6 @@ namespace Repository.Common
         Task<bool> CreateAsync(StudentDTO student);
         Task<bool> EditAsync(StudentDTO student, Guid id);
         Task<bool> DeleteAsync(Guid id);
+        Task<List<StudentDTO>> ParamsAsync(string sortBy);
     }
 }

@@ -116,5 +116,20 @@ namespace Project.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Error for DeleteAsync: {x.Message}");
             }
         }
+        // ---------------- GET ALL WITH SORTING, PAGING, FILTERING ----------------
+        [HttpGet]
+        [Route("params")]
+        public async Task<HttpResponseMessage> ParamsAsync([FromUri]string sortBy = null) // bez null nedaje listu ako ne saljem parametar
+        {
+            try
+            {
+                List<StudentDTO> list = await Service.ParamsAsync(sortBy);
+                return Request.CreateResponse(HttpStatusCode.OK, list);
+            }
+            catch (Exception x)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Error for ParamsAsync: {x.Message}");
+            }
+        }
     }
 }

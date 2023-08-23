@@ -107,5 +107,43 @@ namespace Repository
                 return false;
             }
         }
+        //------------ GET ALL BUT WITH SORTING, PAGING, FILTERING ---------
+        public async Task<List<StudentDTO>> ParamsAsync(string sortBy)
+        {
+            IQueryable<Student> student = Context.Students;
+
+            switch (sortBy) // nema jedino po email, to mi je bilo cudno stavit
+            {
+                case "name_desc":
+                    student = student.OrderByDescending(x => x.FirstName);
+                    break;
+                case "name_asc":
+                    student = student.OrderBy(x => x.FirstName);
+                    break;
+                    //
+                case "surname_desc":
+                    student = student.OrderByDescending(x => x.LastName);
+                    break;
+                case "surname_asc":
+                    student = student.OrderBy(x => x.LastName);
+                    break;
+                    //
+                case "dob_desc":
+                    student = student.OrderByDescending(x => x.DateOfBirth);
+                    break;
+                case "dob_asc":
+                    student = student.OrderBy(x => x.DateOfBirth);
+                    break;
+                    //
+                case "signup_asc":
+                    student = student.OrderBy(x => x.RegisteredOn);
+                    break;
+                default: // signup_desc ... najnoviji student da bude na vrhu, najstariji na dnu kao default
+                    student = student.OrderByDescending(x => x.RegisteredOn);
+                    break;
+            }
+
+            return await _mapper.ProjectTo<StudentDTO>(student).ToListAsync();
+        }
     }
 }
