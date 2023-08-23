@@ -93,5 +93,28 @@ namespace Project.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Error for EditAsync: {x.Message}");
             }
         }
+        //-------------- DELETE ---------------
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public async Task<HttpResponseMessage> DeleteAsync(Guid id)
+        {
+            try
+            {
+                bool result = await Service.DeleteAsync(id);
+
+                if (result)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "Deleted!");
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Failed to delete");
+                }
+            }
+            catch (Exception x)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Error for DeleteAsync: {x.Message}");
+            }
+        }
     }
 }

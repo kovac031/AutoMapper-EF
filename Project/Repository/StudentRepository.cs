@@ -76,13 +76,28 @@ namespace Repository
             try
             {
                 Student existingStudent = await Context.Students.FindAsync(id);
-
                 if (existingStudent == null) { return false; }
 
                 _mapper.Map(student, existingStudent);
 
                 // ovdje bi islo automatsko editiranje, npr editedBy ili timeEdited i sl
 
+                await Context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        //--------------- DELETE ------------------
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            try 
+            {
+                Student student = await Context.Students.FindAsync(id);
+                Context.Students.Remove(student);
                 await Context.SaveChangesAsync();
 
                 return true;

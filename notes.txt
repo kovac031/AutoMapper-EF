@@ -68,3 +68,6 @@ public class DIConfig
 
 ------------------------------------
 
+- get all i get one by id nema problema
+- create trazi unos svih stavki koji nisu mapirane u repozitoriju
+- edit prolazi bilo sta sta mu zadamo, jer smo u MapperProfie definirali iznimke

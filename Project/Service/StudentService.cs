@@ -36,5 +36,10 @@ namespace Service
             bool result = await Repository.EditAsync(student, id);
             return result;
         }
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            bool result = await Repository.DeleteAsync(id);
+            return result;
+        }
     }
 }

@@ -13,6 +13,6 @@ namespace Model.Common
         string LastName { get; set; }
         DateTime DateOfBirth { get; set; }
         string EmailAddress { get; set; }
-        DateTime? RegisteredOn { get; set; }
+        DateTime RegisteredOn { get; set; }
     }
 }
