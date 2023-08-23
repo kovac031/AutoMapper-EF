@@ -17,8 +17,9 @@ namespace Project.WebAPI.Controllers
         {
             Service = service;
         }
+        // ---------------- GET ALL ----------------
         [HttpGet]
-        [Route("getall/")]
+        [Route("getall")]
         public async Task<HttpResponseMessage> GetAllAsync()
         {
             try
@@ -29,6 +30,67 @@ namespace Project.WebAPI.Controllers
             catch (Exception x)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Error for GetAllAsync: {x.Message}");
+            }
+        }
+        // ---------------- GET ONE BY ID ----------------
+        [HttpGet]
+        [Route("getone/{id}")]
+        public async Task<HttpResponseMessage> GetOneByIdAsync(Guid id)
+        {
+            try
+            {
+                StudentDTO student = await Service.GetOneByIdAsync(id);
+                return Request.CreateResponse(HttpStatusCode.OK, student);
+            }
+            catch (Exception x)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Error for GetOneByIdAsync: {x.Message}");
+            }
+        }
+        //--------------- CREATE NEW ---------------------
+        [HttpPost]
+        [Route("create")]
+        public async Task<HttpResponseMessage> CreateAsync(StudentDTO student)
+        {
+            try
+            {
+                bool result = await Service.CreateAsync(student);
+
+                if (result)
+                {
+                    return Request.CreateResponse(HttpStatusCode.Created, "Created!");
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Failed to create");
+                }
+            }
+            catch (Exception x)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Error for CreateAsync: {x.Message}");
+            }
+        }
+        //--------------- EDIT ---------------------
+        [HttpPut]
+        [Route("edit/{id}")]
+        public async Task<HttpResponseMessage> EditAsync(StudentDTO student, Guid id)
+        {
+            try
+            {
+                bool result = await Service.EditAsync(student, id);
+
+                if (result)
+                {
+                    return Request.CreateResponse(HttpStatusCode.Created, "Edited!");
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Failed to edit");
+                }
+            }
+            catch (Exception x)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Error for EditAsync: {x.Message}");
             }
         }
     }

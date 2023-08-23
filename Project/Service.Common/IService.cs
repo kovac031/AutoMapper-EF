@@ -10,5 +10,8 @@ namespace Service.Common
     public interface IService
     {
         Task<List<StudentDTO>> GetAllAsync();
+        Task<StudentDTO> GetOneByIdAsync(Guid id);
+        Task<bool> CreateAsync(StudentDTO student);
+        Task<bool> EditAsync(StudentDTO student, Guid id);
     }
 }
