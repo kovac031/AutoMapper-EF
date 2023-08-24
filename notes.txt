@@ -73,5 +73,6 @@ public class DIConfig
 - edit prolazi bilo sta sta mu zadamo, jer smo u MapperProfie definirali iznimke
 - delete nikaki problem
 
------------ SORTING ---------
+----------- SORTING, FILTERING ---------
 
+- odlucio rucno parametre i sa LINQ

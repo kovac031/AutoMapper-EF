@@ -51,6 +51,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{64384b72-e6fe-48a7-8210-1b96ee512a1e}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{26D9D177-4E13-4BD7-B335-5633204770E5}</Project>
       <Name>Model</Name>

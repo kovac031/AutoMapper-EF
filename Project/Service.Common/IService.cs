@@ -14,6 +14,9 @@ namespace Service.Common
         Task<bool> CreateAsync(StudentDTO student);
         Task<bool> EditAsync(StudentDTO student, Guid id);
         Task<bool> DeleteAsync(Guid id);
-        Task<List<StudentDTO>> ParamsAsync(string sortBy);
+        Task<List<StudentDTO>> ParamsAsync(
+            string sortBy, 
+            string firstName, string lastName,
+            string dobBefore, string dobAfter);
     }
 }

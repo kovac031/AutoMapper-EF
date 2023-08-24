@@ -4,6 +4,7 @@ using Model;
 using Repository.Common;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
@@ -108,9 +109,31 @@ namespace Repository
             }
         }
         //------------ GET ALL BUT WITH SORTING, PAGING, FILTERING ---------
-        public async Task<List<StudentDTO>> ParamsAsync(string sortBy)
+        public async Task<List<StudentDTO>> ParamsAsync(
+            string sortBy, 
+            string firstName, string lastName,//,
+            string dobBefore, string dobAfter)
+        //string regBefore, string regAfter)
         {
-            IQueryable<Student> student = Context.Students;
+            //IQueryable<Student> student = Context.Students;
+
+            //---------------- FILTERING / SEARCH -------------------
+
+            DateTime dobBeforeParsed;
+            bool isDobBeforeValid = DateTime.TryParse(dobBefore, out dobBeforeParsed);
+            DateTime dobAfterParsed;
+            bool isDobAfterValid = DateTime.TryParse(dobAfter, out dobAfterParsed);
+
+            IQueryable<Student> student = Context.Students
+                .Where(s => (firstName == null || s.FirstName.Contains(firstName)) 
+                        && (lastName == null || s.LastName.Contains(lastName))
+                        && (dobBefore == null || dobBeforeParsed >= s.DateOfBirth) // vidim da je >= ali iz nepoznatog razloga vraca obrnuti rezultat, pa eto
+                        && (dobAfter == null || dobAfterParsed <= s.DateOfBirth)
+                        ).AsQueryable();
+
+          
+
+            //---------------- SORTING -------------------------
 
             switch (sortBy) // nema jedino po email, to mi je bilo cudno stavit
             {

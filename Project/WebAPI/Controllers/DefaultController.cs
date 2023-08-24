@@ -119,11 +119,20 @@ namespace Project.WebAPI.Controllers
         // ---------------- GET ALL WITH SORTING, PAGING, FILTERING ----------------
         [HttpGet]
         [Route("params")]
-        public async Task<HttpResponseMessage> ParamsAsync([FromUri]string sortBy = null) // bez null nedaje listu ako ne saljem parametar
+        public async Task<HttpResponseMessage> ParamsAsync(
+            [FromUri]string sortBy = null, 
+            [FromUri] string firstName = null,
+            [FromUri] string lastName = null,
+            [FromUri] string dobBefore = null,
+            [FromUri] string dobAfter = null) // bez null nedaje listu ako ne saljem parametar
         {
             try
             {
-                List<StudentDTO> list = await Service.ParamsAsync(sortBy);
+                List<StudentDTO> list = await Service.ParamsAsync(
+                    sortBy, 
+                    firstName, lastName, 
+                    dobBefore, dobAfter );
+
                 return Request.CreateResponse(HttpStatusCode.OK, list);
             }
             catch (Exception x)

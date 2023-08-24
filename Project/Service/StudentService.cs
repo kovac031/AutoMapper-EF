@@ -41,9 +41,16 @@ namespace Service
             bool result = await Repository.DeleteAsync(id);
             return result;
         }
-        public async Task<List<StudentDTO>> ParamsAsync(string sortBy)
+        public async Task<List<StudentDTO>> ParamsAsync(
+            string sortBy, 
+            string firstName, string lastName,
+            string dobBefore, string dobAfter)
         {
-            List<StudentDTO> list = await Repository.ParamsAsync(sortBy);
+            List<StudentDTO> list = await Repository.ParamsAsync(
+                sortBy, 
+                firstName, lastName, 
+                dobBefore, dobAfter);
+
             return list;
         }
     }
