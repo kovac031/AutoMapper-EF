@@ -12,14 +12,15 @@
 
 ...
 
-- instaliram Autofaci Autofac.WebApi2 u WebAPI 
+- instaliram Autofaci Autofac.WebApi2 u WebAPI // Autofac.Mvc5 za MVC
 
-- instaliram Entity Framework 6.4.4 (EF6) u DAL, Repository
+- instaliram Entity Framework 6.4.4 (EF6) u DAL i Repository (a u MVC i u MVC, jer ce ga trazit u webcongifu)
 	- bez ovoga ne vidi stvari iz dependency injection u repozitoriju i DBcontext u EFContext u DAL
 	- potrebno za mapiranje kada nemamo direktnu konekciju i SQL komande
 
 - DIConfig (svejedno ime) klasa u App_Start:
 
+* za WebAPI *
 
 public class DIConfig
     {
@@ -37,6 +38,26 @@ public class DIConfig
 
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+        }
+    }
+
+* za MVC * 
+
+public class DIConfig
+    {
+        public static void Configure()
+        {    
+            var builder = new ContainerBuilder();
+            builder.RegisterControllers(typeof(MvcApplication).Assembly);
+
+            builder.RegisterType<EFContext>().AsSelf();
+
+            builder.RegisterType<EFContext>().AsSelf();
+            builder.RegisterType<StudentService>().As<IService>();
+            builder.RegisterType<StudentRepository>().As<IRepository>();
+
+            var container = builder.Build();
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
     }
 
@@ -66,7 +87,8 @@ public class DIConfig
             	IMapper mapper = mapperConfig.CreateMapper();
             	builder.RegisterInstance(mapper).As<IMapper>();
 
-------------------------------------
+****************************************************************************************
+------------------------------------ WEB API ---------------------------------------------
 
 - get all i get one by id nema problema
 - create trazi unos svih stavki koji nisu mapirane u repozitoriju
@@ -81,3 +103,10 @@ public class DIConfig
 	- kao sortBy, sa rucnim definiranjem case, nema smisla jer treba sve kombinacije
 	- nesto kao sto sam u PlayPalMiniWebAPI sa klasama koje imaju parametre koje mi trebaju, pa metoda poziva klase za parametre
 	- nisam jos na ovaj nacin pa reko idem
+
+****************************************************************************************
+------------------------------------ MVC -----------------------------------------------------
+
+- kad napravis metodu -> desni klik Add View ... template, model class (View), i reference checbox treba (ono zadnje valjda uredi, bez toga je view sao podaci bez stila)
+
+- ja sam RouteConfig podesio da otvara getall umjesto index
