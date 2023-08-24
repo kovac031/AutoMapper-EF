@@ -17,6 +17,8 @@ namespace Service.Common
         Task<List<StudentDTO>> ParamsAsync(
             string sortBy, 
             string firstName, string lastName,
-            string dobBefore, string dobAfter);
+            string dobBefore, string dobAfter,
+            string regBefore, string regAfter,
+            string pageNumber, string studentsPerPage);
     }
 }

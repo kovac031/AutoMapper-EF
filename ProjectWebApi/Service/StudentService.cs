@@ -44,12 +44,16 @@ namespace Service
         public async Task<List<StudentDTO>> ParamsAsync(
             string sortBy, 
             string firstName, string lastName,
-            string dobBefore, string dobAfter)
+            string dobBefore, string dobAfter,
+            string regBefore, string regAfter,
+            string pageNumber, string studentsPerPage)
         {
             List<StudentDTO> list = await Repository.ParamsAsync(
                 sortBy, 
                 firstName, lastName, 
-                dobBefore, dobAfter);
+                dobBefore, dobAfter,
+                regBefore, regAfter,
+                pageNumber, studentsPerPage);
 
             return list;
         }

@@ -111,11 +111,12 @@ namespace Repository
         //------------ GET ALL BUT WITH SORTING, PAGING, FILTERING ---------
         public async Task<List<StudentDTO>> ParamsAsync(
             string sortBy, 
-            string firstName, string lastName,//,
-            string dobBefore, string dobAfter)
-        //string regBefore, string regAfter)
+            string firstName, string lastName,
+            string dobBefore, string dobAfter,
+            string regBefore, string regAfter,
+            string pageNumber, string studentsPerPage) // lakse mi je Int32.Parse(string) nego int? i kerefeke
         {
-            //IQueryable<Student> student = Context.Students;
+            //IQueryable<Student> student = Context.Students; // bez filtriranja
 
             //---------------- FILTERING / SEARCH -------------------
 
@@ -123,16 +124,21 @@ namespace Repository
             bool isDobBeforeValid = DateTime.TryParse(dobBefore, out dobBeforeParsed);
             DateTime dobAfterParsed;
             bool isDobAfterValid = DateTime.TryParse(dobAfter, out dobAfterParsed);
-
+            //
+            DateTime regBeforeParsed;
+            bool isRegBeforeValid = DateTime.TryParse(regBefore, out regBeforeParsed);
+            DateTime regAfterParsed;
+            bool isRegAfterValid = DateTime.TryParse(regAfter, out regAfterParsed);
+            //
             IQueryable<Student> student = Context.Students
                 .Where(s => (firstName == null || s.FirstName.Contains(firstName)) 
                         && (lastName == null || s.LastName.Contains(lastName))
-                        && (dobBefore == null || dobBeforeParsed >= s.DateOfBirth) // vidim da je >= ali iz nepoznatog razloga vraca obrnuti rezultat, pa eto
-                        && (dobAfter == null || dobAfterParsed <= s.DateOfBirth)
+                        && (dobBefore == null || s.DateOfBirth <= dobBeforeParsed) // daj rezultate manje od zadanog value
+                        && (dobAfter == null || s.DateOfBirth >= dobAfterParsed)
+                        && (regBefore == null || s.RegisteredOn <= regBeforeParsed)
+                        && (regAfter == null || s.RegisteredOn >= regAfterParsed)
                         ).AsQueryable();
-
-          
-
+                    
             //---------------- SORTING -------------------------
 
             switch (sortBy) // nema jedino po email, to mi je bilo cudno stavit
@@ -165,6 +171,17 @@ namespace Repository
                     student = student.OrderByDescending(x => x.RegisteredOn);
                     break;
             }
+
+            //-------------- PAGING ---------------------------
+            if (pageNumber != null && studentsPerPage != null)
+            { student = student.Skip((Int32.Parse(pageNumber) - 1) * Int32.Parse(studentsPerPage)).Take(Int32.Parse(studentsPerPage)); }
+            
+            else if (pageNumber != null)
+            { student = student.Skip((Int32.Parse(pageNumber) - 1) * 5).Take(5); } // 5 nek bude default
+            
+            else if (studentsPerPage != null)
+            { student = student.Skip((1 - 1) * Int32.Parse(studentsPerPage)).Take(Int32.Parse(studentsPerPage)); } // 1 da prikaze prvu stranicu po default
+            //--------------------------------------------------
 
             return await _mapper.ProjectTo<StudentDTO>(student).ToListAsync();
         }

@@ -73,6 +73,11 @@ public class DIConfig
 - edit prolazi bilo sta sta mu zadamo, jer smo u MapperProfie definirali iznimke
 - delete nikaki problem
 
------------ SORTING, FILTERING ---------
+----------- SORTING, FILTERING, PAGING ---------
 
 - odlucio rucno parametre i sa LINQ
+
+- realno ne svidja mi se milijun parametara, ali lakse mi je bilo tako jer je alternativa ili
+	- kao sortBy, sa rucnim definiranjem case, nema smisla jer treba sve kombinacije
+	- nesto kao sto sam u PlayPalMiniWebAPI sa klasama koje imaju parametre koje mi trebaju, pa metoda poziva klase za parametre
+	- nisam jos na ovaj nacin pa reko idem

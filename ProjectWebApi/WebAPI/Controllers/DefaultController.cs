@@ -121,17 +121,19 @@ namespace Project.WebAPI.Controllers
         [Route("params")]
         public async Task<HttpResponseMessage> ParamsAsync(
             [FromUri]string sortBy = null, 
-            [FromUri] string firstName = null,
-            [FromUri] string lastName = null,
-            [FromUri] string dobBefore = null,
-            [FromUri] string dobAfter = null) // bez null nedaje listu ako ne saljem parametar
+            [FromUri] string firstName = null, [FromUri] string lastName = null,
+            [FromUri] string dobBefore = null, [FromUri] string dobAfter = null,
+            [FromUri] string regBefore = null, [FromUri] string regAfter = null,
+            [FromUri] string pageNumber = null, [FromUri] string studentsPerPage = null) // bez null nedaje listu ako ne saljem parametar
         {
             try
             {
                 List<StudentDTO> list = await Service.ParamsAsync(
                     sortBy, 
                     firstName, lastName, 
-                    dobBefore, dobAfter );
+                    dobBefore, dobAfter,
+                    regBefore, regAfter,
+                    pageNumber, studentsPerPage);
 
                 return Request.CreateResponse(HttpStatusCode.OK, list);
             }
