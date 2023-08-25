@@ -11,6 +11,8 @@ using Model;
 using System.Net.Mail;
 using AutoMapper;
 using Service;
+using Microsoft.SqlServer.Server;
+using DAL;
 
 namespace Project.Controllers
 {
@@ -24,9 +26,54 @@ namespace Project.Controllers
             _mapper = mapper;
         }
         // ---------------- GET ALL ----------------        
-        public async Task<ActionResult> GetAllAsync(string sortBy)
+        public async Task<ActionResult> GetAllAsync(
+            string sortBy, 
+            string searchBy, 
+            DateTime? dobMin, DateTime? dobMax,
+            DateTime? regMin, DateTime? regMax )
         {
-            List<StudentDTO> listDTO = await Service.GetAllAsync(sortBy);
+            List<StudentDTO> listDTO = await Service.GetAllAsync(sortBy); // dohvaca sve
+
+            List<StudentDTO> filteredList = listDTO; //prije filtriranja lista ima sve
+
+            if (!string.IsNullOrEmpty(searchBy)) // trazi po imenu i prezimenu
+            {
+                filteredList = listDTO.Where(x =>
+                    x.FirstName.Contains(searchBy) ||
+                    x.LastName.Contains(searchBy))
+                    .ToList();
+            }
+            ViewBag.SearchFilter = searchBy;
+
+            if (dobMin != null && dobMax != null) // filtriranje po DateOfBirth
+            {
+                filteredList = filteredList.Where(x => x.DateOfBirth >= dobMin && x.DateOfBirth <= dobMax).ToList();
+            }
+            else if (dobMin != null)
+            {
+                filteredList = filteredList.Where(x => x.DateOfBirth >= dobMin).ToList();
+            }
+            else if (dobMax != null)
+            {
+                filteredList = filteredList.Where(x => x.DateOfBirth <= dobMax).ToList();
+            }
+            ViewBag.DobMin = dobMin;
+            ViewBag.DobMax = dobMax;
+            //
+            if (regMin != null && regMax != null) // filtriranje po RegisteredOn
+            {
+                filteredList = filteredList.Where(x => x.RegisteredOn >= regMin && x.RegisteredOn <= regMax).ToList();
+            }
+            else if (regMin != null)
+            {
+                filteredList = filteredList.Where(x => x.RegisteredOn >= regMin).ToList();
+            }
+            else if (regMax != null)
+            {
+                filteredList = filteredList.Where(x => x.RegisteredOn <= regMax).ToList();
+            }
+            ViewBag.RegMin = regMin;
+            ViewBag.RegMax = regMax;
 
             //List<StudentView> listView = new List<StudentView>();
             //foreach (StudentDTO studentDTO in listDTO)
@@ -48,9 +95,9 @@ namespace Project.Controllers
             ViewBag.SortByDob = sortBy == "dob_asc" ? "dob_desc" : "dob_asc"; 
             ViewBag.SortByFirstName = sortBy == "name_asc" ? "name_desc" : "name_asc"; 
             ViewBag.SortByLastName = sortBy == "surname_asc" ? "surname_desc" : "surname_asc"; 
-            //ViewBag.CurrentSort = sortBy;
+            ViewBag.CurrentSort = sortBy;
 
-            List<StudentView> listView = _mapper.Map<List<StudentView>>(listDTO);
+            List<StudentView> listView = _mapper.Map<List<StudentView>>(filteredList); // zamjenio listDTO sa filteredList
 
             return View(listView);
         }

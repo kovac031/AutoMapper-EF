@@ -15,93 +15,139 @@
     <p>
         @Html.ActionLink("Create New", "CreateAsync")
     </p>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                <a href="@Url.Action("GetAllAsync", new { sortBy = ViewBag.SortByFirstName } )" class="table-header">
-                    FirstName @if (ViewBag.SortByFirstName == "name_asc")
+    <!-- ------------------- FILTERING ----------------------- -->
+    @using (Html.BeginForm("GetAllAsync", "Default", FormMethod.Get))
+    {
+        <div>
+            <input type="hidden" name="sortBy" value="@ViewBag.CurrentSort" />
+            <div>
+                <label for="searchBy">Search from names and surnames:</label>
+                <input type="text" name="searchBy" value="@ViewBag.SearchFilter" />
+            </div>
+            <div>
+                <label for="dobMin">Date of Birth From:</label>
+                <input type="date" name="dobMin" value="@(ViewBag.DobMin != null ? ((DateTime)ViewBag.DobMin).ToString("yyyy-MM-dd") : "")" />
+
+                <label for="dobMax">Date of Birth To:</label>
+                <input type="date" name="dobMax" value="@(ViewBag.DobMax != null ? ((DateTime)ViewBag.DobMax).ToString("yyyy-MM-dd") : "")" />
+            </div>
+            <div>
+                <label for="regMin">Date Registered On starting from:</label>
+                <input type="date" name="regMin" value="@(ViewBag.RegMin != null ? ((DateTime)ViewBag.RegMin).ToString("yyyy-MM-dd") : "")" />
+
+                <label for="regMax">Date Registered On up to:</label>
+                <input type="date" name="regMax" value="@(ViewBag.RegMax != null ? ((DateTime)ViewBag.RegMax).ToString("yyyy-MM-dd") : "")" />
+
+            </div>
+            <input type="submit" value="Filter" />
+            @if (!string.IsNullOrEmpty(ViewBag.SearchFilter) || ViewBag.DobMin != null || ViewBag.DobMax != null || ViewBag.RegMin != null || ViewBag.RegMax != null)
+            {
+                <a href="@Url.Action("GetAllAsync", "Default")">Clear filter</a>
+            }
+        </div>
+                }
+                <!-- ------------------------------------------------------- -->
+
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id)
+                        </th>
+                        <th>
+                            <a href="@Url.Action("GetAllAsync", 
+                                    new {   sortBy = ViewBag.SortByFirstName, 
+                                            dobMin = ViewBag.DobMin, dobMax = ViewBag.DobMax,
+                                            regMin = ViewBag.RegMin, regMax = ViewBag.RegMax} )" class="table-header">
+                                FirstName @if (ViewBag.SortByFirstName == "name_asc")
+                                {
+                                    <span>↑</span>
+                                }
+                                else if (ViewBag.SortByFirstName == "name_desc")
+                                {
+                                    <span>↓</span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("GetAllAsync", 
+                                    new {   sortBy = ViewBag.SortByLastName, 
+                                            dobMin = ViewBag.DobMin, dobMax = ViewBag.DobMax,
+                                            regMin = ViewBag.RegMin, regMax = ViewBag.RegMax} )" class="table-header">
+                                LastName @if (ViewBag.SortByLastName == "surname_asc")
+                                {
+                                    <span>↑</span>
+                                }
+                                else if (ViewBag.SortByLastName == "surname_desc")
+                                {
+                                    <span>↓</span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("GetAllAsync", 
+                                    new {   sortBy = ViewBag.SortByDob,
+                                            dobMin = ViewBag.DobMin, dobMax = ViewBag.DobMax,
+                                            regMin = ViewBag.RegMin, regMax = ViewBag.RegMax} )" class="table-header">
+                                DateOfBirth @if (ViewBag.SortByDob == "dob_asc")
+                                {
+                                    <span>↑</span>
+                                }
+                                else if (ViewBag.SortByDob == "dob_desc")
+                                {
+                                    <span>↓</span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.EmailAddress)
+                        </th>
+                        <th>
+                            <a href="@Url.Action("GetAllAsync", 
+                                    new {   sortBy = ViewBag.SortBySignUp, 
+                                            dobMin = ViewBag.DobMin, dobMax = ViewBag.DobMax,
+                                            regMin = ViewBag.RegMin, regMax = ViewBag.RegMax } )" class="table-header">
+                                RegisteredOn @if (ViewBag.SortBySignUp == "signup_asc")
+                                {
+                                    <span>↑</span>
+                                }
+                                else if (ViewBag.SortBySignUp == "")
+                                {
+                                    <span>↓</span>
+                                }
+                            </a>
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
                     {
-                        <span>↑</span>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateOfBirth)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EmailAddress)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RegisteredOn)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "EditAsync", new { id = item.Id }) |
+                                @Html.ActionLink("GetOneById", "GetOneByIdAsync", new { id = item.Id }) |
+                                @Html.ActionLink("Delete", "DeleteAsync", new { id = item.Id })
+                            </td>
+                        </tr>
                     }
-                    else if (ViewBag.SortByFirstName == "name_desc")
-                    {
-                        <span>↓</span>
-                    }
-                </a>
-            </th>
-            <th>
-                <a href="@Url.Action("GetAllAsync", new { sortBy = ViewBag.SortByLastName } )" class="table-header">
-                    LastName @if (ViewBag.SortByLastName == "surname_asc")
-                    {
-                        <span>↑</span>
-                    }
-                    else if (ViewBag.SortByLastName == "surname_desc")
-                    {
-                        <span>↓</span>
-                    }
-                </a>
-            </th>
-            <th>
-                <a href="@Url.Action("GetAllAsync", new { sortBy = ViewBag.SortByDob } )" class="table-header">
-                    DateOfBirth @if (ViewBag.SortByDob == "dob_asc")
-                    {
-                        <span>↑</span>
-                    }
-                    else if (ViewBag.SortByDob == "dob_desc")
-                    {
-                        <span>↓</span>
-                    }
-                </a>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmailAddress)
-            </th>
-            <th>
-                <a href="@Url.Action("GetAllAsync", new { sortBy = ViewBag.SortBySignUp } )" class="table-header">
-                    RegisteredOn @if (ViewBag.SortBySignUp == "signup_asc")
-                    {
-                        <span>↑</span>
-                    }
-                    else if (ViewBag.SortBySignUp == "")
-                    {
-                        <span>↓</span>
-                    }
-                </a>
-            </th>
-            <th></th>
-        </tr>
-    
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmailAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegisteredOn)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "EditAsync", new { id = item.Id }) |
-                @Html.ActionLink("GetOneById", "GetOneByIdAsync", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "DeleteAsync", new { id = item.Id })
-            </td>
-        </tr>
-    }
-    
-    </table>
+
+                </table>
 </body>
 </html>
