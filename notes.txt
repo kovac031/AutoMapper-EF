@@ -113,3 +113,7 @@ public class DIConfig
 
 - zbog circular dependency kod mapiranja StudentDTO<->StudentView, premjestio sam StudentView iz kontroler Modela u Model folder sa StudentDTO
 	- compilation error sam rjesio tako sto sam skrljao view i napravio novi, samo ispravit @model nije proslo
+
+- sorting, filtering paging je komplicirano sazeti, pogledati u kontroleru i cshtml sta sam napravio
+
+- za paging instalirat paginglist i paginglist.mvc

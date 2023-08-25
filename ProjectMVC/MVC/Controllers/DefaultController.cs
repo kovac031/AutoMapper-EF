@@ -13,6 +13,7 @@ using AutoMapper;
 using Service;
 using Microsoft.SqlServer.Server;
 using DAL;
+using PagedList;
 
 namespace Project.Controllers
 {
@@ -30,9 +31,12 @@ namespace Project.Controllers
             string sortBy, 
             string searchBy, 
             DateTime? dobMin, DateTime? dobMax,
-            DateTime? regMin, DateTime? regMax )
+            DateTime? regMin, DateTime? regMax,
+            int? page)
         {
             List<StudentDTO> listDTO = await Service.GetAllAsync(sortBy); // dohvaca sve
+
+            // FILTERING
 
             List<StudentDTO> filteredList = listDTO; //prije filtriranja lista ima sve
 
@@ -97,9 +101,25 @@ namespace Project.Controllers
             ViewBag.SortByLastName = sortBy == "surname_asc" ? "surname_desc" : "surname_asc"; 
             ViewBag.CurrentSort = sortBy;
 
-            List<StudentView> listView = _mapper.Map<List<StudentView>>(filteredList); // zamjenio listDTO sa filteredList
+            // PAGING part 1
+            int count = filteredList.Count; // mislim da PagedList usporedjuje count sa pageSize i zato nam treba
 
-            return View(listView);
+            int pageNumber = page ?? 1;
+            int pageSize = 5;
+
+            List<StudentDTO> filteredDTO = filteredList.Skip((pageNumber - 1) * pageSize)
+                                                        .Take(pageSize)
+                                                        .ToList();
+
+            // mapiranje
+            List<StudentView> listView = _mapper.Map<List<StudentView>>(filteredDTO); // zamjenio listDTO sa filteredList
+            //
+
+            // PAGING part 2
+            StaticPagedList<StudentView> pagedList = new StaticPagedList<StudentView>(listView, pageNumber, pageSize, count);
+            ViewBag.CurrentPage = page;
+
+            return View(pagedList);
         }
         // ---------------- GET ONE BY ID ----------------
         public async Task<ActionResult> GetOneByIdAsync(Guid id)
