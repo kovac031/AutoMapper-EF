@@ -19,4 +19,10 @@ Showing filtering:
 
 ## Project MVC
 - same as for WebAPI except:
-  - wip
+  - is MVC, so has Views and View models
+  - controller code slightly different
+  - paging, sorting, filtering approach different
+ 
+## It's not pretty but it works
+Can set a lot of parameters and nothing gets dropped while paging, sorting, filtering
+![scr2](https://github.com/kovac031/AutoMapper-EF/blob/main/scr2.jpg)
