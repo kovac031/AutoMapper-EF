@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using Model;
 using System.Net.Mail;
 using AutoMapper;
+using Service;
 
 namespace Project.Controllers
 {
@@ -53,7 +54,63 @@ namespace Project.Controllers
             StudentView studentView = _mapper.Map<StudentView>(studentDTO);
             return View(studentView);
         }
+        // ---------------- CREATE NEW ----------------
+        [HttpGet]
+        public async Task<ActionResult> CreateAsync()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> CreateAsync(StudentView studentView)
+        {
+            try
+            {
+                StudentDTO studentDTO = _mapper.Map<StudentDTO>(studentView);
 
+                bool created = await Service.CreateAsync(studentDTO);
+                if (!created)
+                {
+                    return View("Failed to create");
+                }
+                return RedirectToAction("GetAllAsync");
+            }
+            catch (Exception)
+            {
+                return View("Exception");
+            }
+        }
+        // ---------------- EDIT ----------------
+        [HttpGet]
+        public async Task<ActionResult> EditAsync(Guid id)
+        {
+            StudentDTO studentDTO = await Service.GetOneByIdAsync(id);
+            StudentView studentView = _mapper.Map<StudentView>(studentDTO);
+            return View(studentView);
+        }
+        [HttpPost]
+        public async Task<ActionResult> EditAsync(StudentView studentView)
+        {
+            try
+            {
+                StudentDTO studentDTO = _mapper.Map<StudentDTO>(studentView);
 
+                bool created = await Service.EditAsync(studentDTO, studentDTO.Id);
+                if (!created)
+                {
+                    return View("Failed to edit");
+                }
+                return RedirectToAction("GetAllAsync");
+            }
+            catch (Exception)
+            {
+                return View("Exception");
+            }
+        }
+        // ---------------- DELETE ----------------
+        public async Task<ActionResult> DeleteAsync(Guid id)
+        {
+            await Service.DeleteAsync(id);
+            return RedirectToAction("GetAllAsync");
+        }
     }
 }

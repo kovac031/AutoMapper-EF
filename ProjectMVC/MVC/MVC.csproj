@@ -225,6 +225,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Default\GetAllAsync.cshtml" />
     <Content Include="Views\Default\GetOneByIdAsync.cshtml" />
+    <Content Include="Views\Default\CreateAsync.cshtml" />
+    <Content Include="Views\Default\EditAsync.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

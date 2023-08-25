@@ -26,5 +26,20 @@ namespace Service
             StudentDTO student = await Repository.GetOneByIdAsync(id);
             return student;
         }
+        public async Task<bool> CreateAsync(StudentDTO student)
+        {
+            bool result = await Repository.CreateAsync(student);
+            return result;
+        }
+        public async Task<bool> EditAsync(StudentDTO student, Guid id)
+        {
+            bool result = await Repository.EditAsync(student, id);
+            return result;
+        }
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            bool result = await Repository.DeleteAsync(id);
+            return result;
+        }
     }
 }

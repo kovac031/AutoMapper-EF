@@ -48,5 +48,63 @@ namespace Repository
 
             return _mapper.Map<StudentDTO>(student);
         }
+        //--------------- CREATE NEW --------------
+        public async Task<bool> CreateAsync(StudentDTO student)
+        {
+            try
+            {
+                Student newStudent = _mapper.Map<Student>(student);
+
+                newStudent.Id = Guid.NewGuid(); // mapper inace trazi sve, sto ne dobije bude null
+                newStudent.RegisteredOn = DateTime.Now; // *
+
+                Context.Students.Add(newStudent);
+
+                await Context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        //--------------- EDIT --------------
+        public async Task<bool> EditAsync(StudentDTO student, Guid id)
+        {
+            try
+            {
+                Student existingStudent = await Context.Students.FindAsync(id);
+                if (existingStudent == null) { return false; }
+
+                _mapper.Map(student, existingStudent);
+
+                // ovdje bi islo automatsko editiranje, npr editedBy ili timeEdited i sl
+
+                await Context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        //--------------- DELETE ------------------
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            try
+            {
+                Student student = await Context.Students.FindAsync(id);
+                Context.Students.Remove(student);
+                await Context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
