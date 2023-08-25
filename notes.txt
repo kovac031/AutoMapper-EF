@@ -75,7 +75,7 @@ public class DIConfig
 - u Common pravis klasu MapperProfile
 
 - instaliras AutoMapper i AutoMapper.Extensions.Microsoft.DependencyInjection u class library gdje ce ga se koristit:
-	- Common zbog MappingProfile, Repository jer tamo mapira, Model jer je tamo StudentDTO, DAL jer je tamo Student, WebAPI jer je tamo DIConfig
+	- Common zbog MappingProfile, Repository jer tamo mapira, Model jer je tamo StudentDTO, DAL jer je tamo Student, WebAPI jer je tamo DIConfig (ali u MVC se isto mapira u kontroleru)
 	- zbog Entity Framework 4.7.2 korisiti Automapper 9 i AutoMapper.Extensions.Microsoft.DependencyInjection 7 ... * u ovoj fazi sve jos radi, instalacija nece pokidati kod
 
 - dodati u DIConfig:
@@ -110,3 +110,6 @@ public class DIConfig
 - kad napravis metodu -> desni klik Add View ... template, model class (View), i reference checbox treba (ono zadnje valjda uredi, bez toga je view sao podaci bez stila)
 
 - ja sam RouteConfig podesio da otvara getall umjesto index
+
+- zbog circular dependency kod mapiranja StudentDTO<->StudentView, premjestio sam StudentView iz kontroler Modela u Model folder sa StudentDTO
+	- compilation error sam rjesio tako sto sam skrljao view i napravio novi, samo ispravit @model nije proslo

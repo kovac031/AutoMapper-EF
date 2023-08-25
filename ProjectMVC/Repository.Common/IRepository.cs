@@ -10,5 +10,6 @@ namespace Repository.Common
     public interface IRepository
     {
         Task<List<StudentDTO>> GetAllAsync();
+        Task<StudentDTO> GetOneByIdAsync(Guid id);
     }
 }

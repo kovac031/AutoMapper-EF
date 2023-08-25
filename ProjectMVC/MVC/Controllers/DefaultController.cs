@@ -9,36 +9,51 @@ using System.Web;
 using System.Web.Mvc;
 using Model;
 using System.Net.Mail;
-using Project.Models;
+using AutoMapper;
 
 namespace Project.Controllers
 {
     public class DefaultController : Controller
     {
+        public readonly IMapper _mapper; // AutoMapper
         public IService Service { get; set; }
-        public DefaultController(IService service)
+        public DefaultController(IService service, IMapper mapper)
         {
             Service = service;
+            _mapper = mapper;
         }
         // ---------------- GET ALL ----------------        
         public async Task<ActionResult> GetAllAsync()
         {
             List<StudentDTO> listDTO = await Service.GetAllAsync();
-            List<StudentView> listView = new List<StudentView>();
-            foreach (StudentDTO studentDTO in listDTO)
-            {
-                StudentView studentView = new StudentView();
 
-                studentView.Id = studentDTO.Id;
-                studentView.FirstName = studentDTO.FirstName;
-                studentView.LastName = studentDTO.LastName;
-                studentView.DateOfBirth = studentDTO.DateOfBirth;
-                studentView.EmailAddress = studentDTO.EmailAddress;
-                studentView.RegisteredOn = studentDTO.RegisteredOn;
+            //List<StudentView> listView = new List<StudentView>();
+            //foreach (StudentDTO studentDTO in listDTO)
+            //{
+            //    StudentView studentView = new StudentView();
 
-                listView.Add(studentView);
-            }
+            //    studentView.Id = studentDTO.Id;
+            //    studentView.FirstName = studentDTO.FirstName;
+            //    studentView.LastName = studentDTO.LastName;
+            //    studentView.DateOfBirth = studentDTO.DateOfBirth;
+            //    studentView.EmailAddress = studentDTO.EmailAddress;
+            //    studentView.RegisteredOn = studentDTO.RegisteredOn;
+
+            //    listView.Add(studentView);
+            //}
+
+            List<StudentView> listView = _mapper.Map<List<StudentView>>(listDTO);
+
             return View(listView);
         }
+        // ---------------- GET ONE BY ID ----------------
+        public async Task<ActionResult> GetOneByIdAsync(Guid id)
+        {
+            StudentDTO studentDTO = await Service.GetOneByIdAsync(id);
+            StudentView studentView = _mapper.Map<StudentView>(studentDTO);
+            return View(studentView);
+        }
+
+
     }
 }

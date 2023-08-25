@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using Autofac.Integration.Mvc;
+using AutoMapper;
+using Common;
 using DAL;
 using Repository;
 using Repository.Common;
@@ -26,6 +28,15 @@ namespace Project.App_Start
             builder.RegisterType<EFContext>().AsSelf();
             builder.RegisterType<StudentService>().As<IService>();
             builder.RegisterType<StudentRepository>().As<IRepository>();
+
+            //----------  AutoMapper Configurations -------------
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            builder.RegisterInstance(mapper).As<IMapper>();
+            //---------------------------------------------------
 
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
