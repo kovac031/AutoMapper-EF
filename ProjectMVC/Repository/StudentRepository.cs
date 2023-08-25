@@ -21,9 +21,42 @@ namespace Repository
             _mapper = mapper;
         }
         //----------------- GET ALL --------------
-        public async Task<List<StudentDTO>> GetAllAsync()
+        public async Task<List<StudentDTO>> GetAllAsync(string sortBy)
         {
             IQueryable<Student> student = Context.Students;
+
+            //---------------- SORTING -------------------------
+
+            switch (sortBy) 
+            {
+                case "name_desc":
+                    student = student.OrderByDescending(x => x.FirstName);
+                    break;
+                case "name_asc":
+                    student = student.OrderBy(x => x.FirstName);
+                    break;
+                //
+                case "surname_desc":
+                    student = student.OrderByDescending(x => x.LastName);
+                    break;
+                case "surname_asc":
+                    student = student.OrderBy(x => x.LastName);
+                    break;
+                //
+                case "dob_desc":
+                    student = student.OrderByDescending(x => x.DateOfBirth);
+                    break;
+                case "dob_asc":
+                    student = student.OrderBy(x => x.DateOfBirth);
+                    break;
+                //
+                case "signup_asc":
+                    student = student.OrderBy(x => x.RegisteredOn);
+                    break;
+                default: // signup_desc ... najnoviji student da bude na vrhu, najstariji na dnu kao default
+                    student = student.OrderByDescending(x => x.RegisteredOn);
+                    break;
+            }
 
             //List<StudentDTO> list = await student.Select(x => new StudentDTO()
             //{

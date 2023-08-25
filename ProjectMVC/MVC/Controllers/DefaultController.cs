@@ -24,9 +24,9 @@ namespace Project.Controllers
             _mapper = mapper;
         }
         // ---------------- GET ALL ----------------        
-        public async Task<ActionResult> GetAllAsync()
+        public async Task<ActionResult> GetAllAsync(string sortBy)
         {
-            List<StudentDTO> listDTO = await Service.GetAllAsync();
+            List<StudentDTO> listDTO = await Service.GetAllAsync(sortBy);
 
             //List<StudentView> listView = new List<StudentView>();
             //foreach (StudentDTO studentDTO in listDTO)
@@ -42,6 +42,13 @@ namespace Project.Controllers
 
             //    listView.Add(studentView);
             //}
+
+            // SORTING
+            ViewBag.SortBySignUp = string.IsNullOrEmpty(sortBy) ? "signup_asc" : "";
+            ViewBag.SortByDob = sortBy == "dob_asc" ? "dob_desc" : "dob_asc"; 
+            ViewBag.SortByFirstName = sortBy == "name_asc" ? "name_desc" : "name_asc"; 
+            ViewBag.SortByLastName = sortBy == "surname_asc" ? "surname_desc" : "surname_asc"; 
+            //ViewBag.CurrentSort = sortBy;
 
             List<StudentView> listView = _mapper.Map<List<StudentView>>(listDTO);
 

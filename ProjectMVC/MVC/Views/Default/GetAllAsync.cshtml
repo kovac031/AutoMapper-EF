@@ -21,19 +21,55 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                <a href="@Url.Action("GetAllAsync", new { sortBy = ViewBag.SortByFirstName } )" class="table-header">
+                    FirstName @if (ViewBag.SortByFirstName == "name_asc")
+                    {
+                        <span>↑</span>
+                    }
+                    else if (ViewBag.SortByFirstName == "name_desc")
+                    {
+                        <span>↓</span>
+                    }
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                <a href="@Url.Action("GetAllAsync", new { sortBy = ViewBag.SortByLastName } )" class="table-header">
+                    LastName @if (ViewBag.SortByLastName == "surname_asc")
+                    {
+                        <span>↑</span>
+                    }
+                    else if (ViewBag.SortByLastName == "surname_desc")
+                    {
+                        <span>↓</span>
+                    }
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
+                <a href="@Url.Action("GetAllAsync", new { sortBy = ViewBag.SortByDob } )" class="table-header">
+                    DateOfBirth @if (ViewBag.SortByDob == "dob_asc")
+                    {
+                        <span>↑</span>
+                    }
+                    else if (ViewBag.SortByDob == "dob_desc")
+                    {
+                        <span>↓</span>
+                    }
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EmailAddress)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RegisteredOn)
+                <a href="@Url.Action("GetAllAsync", new { sortBy = ViewBag.SortBySignUp } )" class="table-header">
+                    RegisteredOn @if (ViewBag.SortBySignUp == "signup_asc")
+                    {
+                        <span>↑</span>
+                    }
+                    else if (ViewBag.SortBySignUp == "")
+                    {
+                        <span>↓</span>
+                    }
+                </a>
             </th>
             <th></th>
         </tr>

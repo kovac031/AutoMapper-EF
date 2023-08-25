@@ -16,9 +16,9 @@ namespace Service
         {
             Repository = repository;
         }
-        public async Task<List<StudentDTO>> GetAllAsync()
+        public async Task<List<StudentDTO>> GetAllAsync(string sortBy)
         {
-            List<StudentDTO> list = await Repository.GetAllAsync();
+            List<StudentDTO> list = await Repository.GetAllAsync(sortBy);
             return list;
         }
         public async Task<StudentDTO> GetOneByIdAsync(Guid id)
